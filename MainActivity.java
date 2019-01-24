@@ -20,6 +20,9 @@ public class MainActivity extends AppCompatActivity {
     double czas;
     double promile = 0;
 
+    double voltage;
+    double ilosc;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +51,8 @@ public class MainActivity extends AppCompatActivity {
         WyswietlGramy();
     }
     public void Inne(View view){
-
+        Intent intent = new Intent(this, InneActivity.class);
+        startActivityForResult(intent,2);
     }
 
     private void WyswietlGramy() {
@@ -106,6 +110,24 @@ public class MainActivity extends AppCompatActivity {
                 Bundle extras = data.getExtras();
                 waga1 = extras.getString("extra_waga");
                 stan = extras.getBoolean("extra_stan");
+                //Toast.makeText(MainActivity.this, "Stan: " + stan, Toast.LENGTH_SHORT ).show();
+                //Toast.makeText(MainActivity.this, "Waga: " + waga1, Toast.LENGTH_SHORT ).show();
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+            }
+        }
+        if (requestCode == 2){
+            if(resultCode == Activity.RESULT_OK){
+                Bundle extras = data.getExtras();
+                ilosc = extras.getDouble("extra_ilosc");
+                voltage = extras.getDouble("extra_voltage");
+
+                double wynik = ilosc*voltage/100.0*0.78;
+                //Toast.makeText(MainActivity.this, "Stan: " + wynik, Toast.LENGTH_SHORT ).show();
+                gramyAlk += Math.round(wynik*100.0)/100.0;
+                WyswietlGramy();
+
+
                 //Toast.makeText(MainActivity.this, "Stan: " + stan, Toast.LENGTH_SHORT ).show();
                 //Toast.makeText(MainActivity.this, "Waga: " + waga1, Toast.LENGTH_SHORT ).show();
             }
