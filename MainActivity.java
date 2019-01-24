@@ -16,6 +16,8 @@ public class MainActivity extends AppCompatActivity {
     double gramyAlk = 0;
     String waga1 = "0";
     Boolean stan;
+    double graf;
+    double czas;
     double promile = 0;
 
     @Override
@@ -41,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
         promile = 0;
         TextView trzezwy = (TextView)findViewById(R.id.trzezwy);
         trzezwy.setText("");
+        TextView Obliczone = (TextView)findViewById(R.id.textViewOblicz);
+        Obliczone.setText("");
         WyswietlGramy();
     }
     public void Inne(View view){
@@ -59,23 +63,41 @@ public class MainActivity extends AppCompatActivity {
 
     private void otworz_proflActivity() {
         Intent intent = new Intent(this, profilActivity.class);
+        waga1 = waga1;
+        intent.putExtra("extra_waga",waga1);
         startActivityForResult(intent,1);
+
     }
 
-    /*private void otworz_proflActivity() {
-        Intent intent = new Intent(this, profilActivity.class);
-        startActivity(intent);
-    }*/
-
-
-    /*public void Oblicz(View view) {
-        String waga1 = getIntent().getStringExtra("extra_waga");
+    public void Oblicz(View view){
         TextView Obliczone = (TextView)findViewById(R.id.textViewOblicz);
         int wagai = Integer.parseInt(waga1);
-        double promile = gramyAlk/(0.6*wagai);
-        Obliczone.setText(String.format("%.2f", promile));
+        if(wagai == 0) {
+            Toast.makeText(MainActivity.this, "BRAK WAGI!", Toast.LENGTH_SHORT ).show();
+        } else {
+            if (stan == Boolean.TRUE)
+                promile = gramyAlk/(0.6*wagai);
+            else
+                promile = gramyAlk/(0.7*wagai);
+            Obliczone.setText(String.format("Promili po 1h: %.2f", promile));
 
-    }*/
+            graf = Math.round(promile*100.0)/100.0;
+            double petla = promile;
+            int godz = 0;
+            while (petla >0.2) {
+                petla = petla - 0.12;
+                godz = godz + 1;
+            }
+            godz = godz + 1;
+            czas = godz;
+            TextView trzezwy = (TextView)findViewById(R.id.trzezwy);
+            if (stan == Boolean.TRUE)
+                trzezwy.setText(String.format("Bedziesz trzeźwa za ok. %dh",godz));
+            else
+                trzezwy.setText(String.format("Bedziesz trzeźwy za ok. %dh",godz));
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -91,27 +113,16 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-    public void Oblicz(View view){
-        TextView Obliczone = (TextView)findViewById(R.id.textViewOblicz);
-        int wagai = Integer.parseInt(waga1);
-        if(wagai == 0) {
-            Toast.makeText(MainActivity.this, "BRAK WAGI!", Toast.LENGTH_SHORT ).show();
-        } else {
-            if (stan == Boolean.TRUE)
-                promile = gramyAlk/(0.7*wagai);
-            else
-                promile = gramyAlk/(0.6*wagai);
-        }
-        Obliczone.setText(String.format("%.2f", promile));
 
-        double petla = promile;
-        int godz = 0;
-        while (petla >0.2) {
-            petla = petla - 0.12;
-            godz = godz + 1;
+    public void graph(View view) {
+        if(graf==0 || czas == 0) {
+            Toast.makeText(MainActivity.this, "Brak obliczonych promili lub wagi!!!" , Toast.LENGTH_SHORT ).show();
         }
-        godz = godz - 1;
-        TextView trzezwy = (TextView)findViewById(R.id.trzezwy);
-        trzezwy.setText(String.format("Bedziesz trzeźwy/a za ok. %dh",godz));
+        else {
+            Intent intent = new Intent(this, GraphActivity.class);
+            intent.putExtra("extra_promile", graf);
+            intent.putExtra("extra_czas", czas);
+            startActivity(intent);
+        }
     }
 }

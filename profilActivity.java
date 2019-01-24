@@ -18,29 +18,25 @@ import java.io.OutputStreamWriter;
 public class profilActivity extends AppCompatActivity {
 
     Boolean stan;
-
+    String waga;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profil);
+        waga = getIntent().getStringExtra("extra_waga");
+        TextView Waga = (TextView) findViewById(R.id.waga);
+        //Toast.makeText(profilActivity.this, "Waga: " + waga, Toast.LENGTH_SHORT ).show();
+        if(waga.equals("0")){}
+        else
+            Waga.setText(waga);
     }
 
-    /*public void zapiszProfil(View view) {
-        TextView Waga = (TextView)findViewById(R.id.waga);
-        String waga = Waga.getText().toString();
-
-
-        Intent intent = new Intent(profilActivity.this, MainActivity.class);
-        intent.putExtra("extra_waga",waga);
-        //Toast.makeText(profilActivity.this, "Waga: " + waga, Toast.LENGTH_SHORT ).show();
-        startActivity(intent);
-    }*/
     public void zapiszProfil(View view){
         Intent returnIntent = new Intent();
 
 
         TextView Waga = (TextView) findViewById(R.id.waga);
-        String waga = Waga.getText().toString();
+        waga = Waga.getText().toString();
 
         returnIntent.putExtra("extra_waga",waga);
 
